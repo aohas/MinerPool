@@ -1,0 +1,1 @@
+cudaminer.exe --algo=scrypt:2048 -o stratum+tcp://scryptnf.eu.nicehash.com:3335 -u 14vZ4DHDzhttzKyNAmLzpRq6VLmCGb16vX -p password -i 0 -l T10x20 -C 1 -H 2
