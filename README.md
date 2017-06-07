@@ -4,7 +4,7 @@
 1 CPU 挖矿 minerd
 
 sh minerd_linux.sh minerd_win.cmd sh minerd_mac.sh
-
+增加CPU挖矿工具cpuminer-multi-rel1.3.1-x64
 2 A卡挖矿
 
 sgminer_win.cmd
