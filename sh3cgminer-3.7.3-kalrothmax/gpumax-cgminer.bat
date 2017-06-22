@@ -1,0 +1,3 @@
+setx GPU_MAX_ALLOC_PERCENT 100
+setx GPU_USE_SYNC_OBJECTS 1
+cgminer.exe

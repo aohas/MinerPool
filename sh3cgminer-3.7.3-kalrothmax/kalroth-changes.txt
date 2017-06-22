@@ -1,0 +1,299 @@
+This is a personal compile of cgminer 3.7.2 by Martin "Kalroth" Danielsen.
+Source available here: https://github.com/Kalroth/cgminer-3.7.2-kalroth
+
+Email: kalroth@gmail.com
+IRC: Kalroth in #middlecoin on irc.freenode.net.
+
+This build is made for myself and I take no responsiblity for how it acts on other computers.
+Remember kids, don't accept binaries from strangers!
+
+CHANGES (newest first):
+
+--- 2014-02-04 -------------------------------------------------------------------------------
+CHANGE: New version number! it's now version 3.7.3, so people can differ between my branch
+and the official 3.7.2 branch.
+
+CHANGE: Multiple load balancing pool information 
+The lines "Connected to multiple pools .." and best share have been replaced with a new
+display for setups with load balancing and multiple pools.
+
+The display now shows information for up to four pools;
+* pool name or just pool number
+* coin diff (D:)
+* accepted shares (A:)
+* rejected shares (R:)
+* disconnects (DC:)
+
+CHANGE: Increase readability and space usage by replacing first horizontal ruler with help
+text (color coding imported from bfgminer), removing empty line and reordering status lines,
+fix compact mode output.
+
+CHANGE: Add uptime information to the first status line.
+
+CHANGE:  Marquee removed
+Vergo's uptime counter replaced the need for the marquee.
+
+--- 2014-02-01 -------------------------------------------------------------------------------
+CHANGE:  Idle state for GPUs when there's no work.
+gpu-engine and gpu-memclock exit values are applied when there's no work available. This should
+prevent overclocked devices from going unstable when a pool goes down for a longer duration.
+
+FIX:  Comma separated gpu-thread code enabled properly.
+It is now enabled when USE_SCRYPT is true, rather than bound to HAVE_ADL.
+
+FIX: Save config code now store gpu-threads too. 
+
+CHANGE:  Work unit efficiency added to ncurses display
+It's a percentage display showing the value of (work units / average hashrate) * 100, at the
+request of Marko.
+
+
+--- 2014-01-30 -------------------------------------------------------------------------------
+FIX: Save config code updated.
+Saving configuration now supports xintensity, rawintensity, cl-filename, gpu engine and
+memclock exit/disabled values, through both ncurses interface and API. Shaders setting is also
+being ignored if it is set to zero - first device setting tested only.
+
+Additionally save config function does not save the kernel setting is disabled if scrypt is set
+to true. This prevents the following issue:
+https://github.com/Kalroth/cgminer-3.7.2-kalroth/issues/6
+
+
+--- 2014-01-24 -------------------------------------------------------------------------------
+UPDATE: gpu-engine and gpu-memclock exit values are now applied when disabling a device. This
+goes for both the ncurses interface and through the api.
+
+
+--- 2014-01-23 -------------------------------------------------------------------------------
+NEW: Device specific kernel .cl file.
+It is now possible to set different .cl files per GPU device through the --cl-filename
+parameter, and comma separated values are of course supported!
+
+Example of usage:
+  "cl-filename" : "scrypt6970,scryptR9290",
+
+NOTE: Do NOT include the file extension in the name!
+
+
+--- 2014-01-22 -------------------------------------------------------------------------------
+NEW: --rawintensity option, by request of Dead2.
+This setting allows to set the GPU intensity value directly without any modifiers, it does not
+get any more raw than this! Look at the xintensity description raw for examples of regular
+intensity values. You can also set this value through the ncurses interface by pressing:
+G -> A -> select device id -> enter value.
+
+Minor xintensity code cleanup as well.
+
+MINOR CHANGE: Support for cgwatchers pool name setting.
+--name and --poolname now acts identically.
+
+CLEANUP: Changed more messages after pool naming feature.
+
+NEW: Failover pool switching back delay is now configurable.
+--failover-switch-delay sets the delay in seconds before switching back to a failed pool,
+default is 60 seconds.
+
+
+--- 2014-01-19 -------------------------------------------------------------------------------
+CHANGE: xintensity can now be set through the interface.
+Press G, X, select your device ID and enter a value between 1 and 9999.
+
+Thanks to veox of sgminer for the code:
+  http://github.com/veox/sgminer/commit/463668b8789521693ad90065115906f0ee53deb8
+
+MINOR CHANGE, API: Added two more decimal places to MH/s.
+
+
+--- 2014-01-18 -------------------------------------------------------------------------------
+MAJOR CHANGE, EXPERIMENTAL: A new way of setting intensity; introducing xintensity!
+All of this is credited to ArGee of RGMiner, he did the initial ground work for this setting.
+
+This new setting allows for a much finer grained intensity setting and also opens up for dual
+gpu threads on devices not previously able to. Note: make sure to use lower thread-concurrency
+values when you increase cpu threads.
+
+Intensity is currently used to spawn GPU threads as a simple 2^value setting.
+  I:13 =    8192 threads
+  I:15 =   32768 threads
+  I:17 =  131072 threads
+  I:18 =  262144 threads
+  I:19 =  524288 threads
+  I:20 = 1048576 threads
+Notice how the higher settings increase thread count tremendously.
+
+Now enter the xintensity setting (Yes, I am a genius with my naming convention!).
+It is simply a shader multiplier, obviously based on the amount of shaders you got on a card,
+this should allow the same value to scale with different card models.
+   6970 with 1536 shaders: xI:64 = 98304 threads
+R9 280X with 2048 shaders: xI:64 = 131072 threads
+ R9 290 with 2560 shaders: xI:64 = 180224 threads
+R9 290X with 2816 shaders: xI:64 = 163840 threads
+
+   6970 with 1536 shaders: xI:300 = 460800 threads
+R9 280X with 2048 shaders: xI:300 = 614400 threads
+ R9 290 with 2560 shaders: xI:300 = 768000 threads
+R9 290X with 2816 shaders: xI:300 = 844800 threads
+
+It's now much easier to control thread intensity and it potentially allows for a uniform way
+of setting the intensity on your system. I'm very interested in constructive feedback, as I
+do not have access to a lot of different card models.
+
+This change has been tested on 6970, R9 290, R9 290X - all with equal or better speeds than
+regular intensity setting after a little tuning, but your mileage may vary. Don't fret it, if
+this doesn't work for you, the regular intensity setting is still available.
+
+
+--- 2014-01-18 -------------------------------------------------------------------------------
+CHANGE: Block poolname now next to block diff.
+Previously top status display had a line with random block information; few digits from previous
+block, block difficulty, block start and best share. The block digits have been removed and
+pool name is shown instead.
+
+MAJOR CHANGE: Stratum servers can now be named.
+The names will be used throughout the display in the program, when not set "Pool 1" will
+simply be used instead. The names are not exposed through API yet, it's on my TODO list.
+
+Use "poolname" like this:
+
+	{
+		"poolname" : "Example pool",
+		"url" : "stratum+tcp://example.com:8080",
+		"user" : "y",
+		"pass" : "x"
+	},
+
+MINOR CHANGE: A --more-notices option has been added.
+Work restart and new block notices are now hidden by default, so you need to use this option
+to enable them. I might throw more notices in under this catch-all setting later.
+
+--- 2014-01-17 -------------------------------------------------------------------------------
+BUGFIX: Device rejection percentage wanders over time.
+It was using the width of accepted shares in the text formatting.
+
+
+--- 2014-01-10 -------------------------------------------------------------------------------
+CHANGE:  Added BIOS information to --ndevs|-n listing.
+This will aid people identifying cards in setups with different cards within the same series,
+eg. 7950 and 7970s, or 290 and 290Xs.
+
+
+--- 2014-01-09 -------------------------------------------------------------------------------
+MINOR CHANGE: Added a warning message if GPU_MAX_ALLOC_PERCENT or GPU_USE_SYNC_OBJECTS is not
+set through export (Linux) or setx (Windows).
+
+MINOR CHANGE: Added a switch to the log date and time format. It is now possible to switch
+back to full date and time on each log line with "--log-dateformat 1". The short time only
+format is still default with the value of 0.
+
+MINOR CHANGE: Intensity maximum has been raised from 20 to 25. It doesn't seem to do much of a
+difference above 20 for me, but others might have different experiences.
+
+FLUFF: Change log is a little prettier now. Yes, I'll github it soon, I think. Soon(tm).
+
+
+--- 2014-01-06 -------------------------------------------------------------------------------
+BUGFIX: -g or --gpu-threads is now set to 1 by default. When I added the comma separating
+code, I forgot to give it a default value. It is now 1 unless specified in the config file or
+in the command line.
+
+
+--- 2014-01-05 -------------------------------------------------------------------------------
+MAJOR CHANGE: -g or --gpu-threads now support comma separated values, yay!
+It is exactly what it says, now you can finally put that Frankenrig configuration in one file.
+The parameter follows the same design as gpu-engine and gpu-memclock.
+
+MINOR CHANGE: I've reinstated display of intensity on GPU status lines. As a bonus I've also
+added threads. I had removed intensity earlier because of lack of space, but now that accepted
+and rejected got replaced with rejected percentage, there was suddenly plenty of room.
+
+BUGFIX: Corrected the rejection percentage counter, thanks to Mikk36!
+It was calculating the reject percentage out of the accepted shares only. Now it is fixed so
+it calculates the reject percentage out of the total shares. The displayed rejection percentage
+will be a little lower because of this, hooray for visual optimizations. :)
+
+
+--- 2014-01-05 -------------------------------------------------------------------------------
+MAJOR CHANGE: Added program exit values for gpu-engine and gpu-memclock. This is only relevant
+for mining rigs that are also used for other purposes. Like my gaming PC. :)
+
+When my R9 290 is mining, it is running at 1000 engine and 1500 memclock. But when I am using
+it for gaming, it runs 1117 engine and 1375 memclock. Normally I have to use a utility like
+MSI AfterBurner or Sapphire TriXX to do so. But this change allows me to set an exit value
+for each GPU when cgminer exits.
+
+Above functionality as an example: --gpu-engine 1000:1117 --gpu-memclock 1500:1375
+
+You can still combine it with multiple cards like this:
+--gpu-engine 900,1000:1117 --gpu-memclock 1375,1500:1375
+or this:
+--gpu-engine 900:880,1000:1117 --gpu-memclock 1375:1250,1500:1375
+
+Modified files: cgminer.c, adl.c, driver-opencl.c and miner.h
+
+
+--- 2014-01-04 -------------------------------------------------------------------------------
+CLEANUP: Added dates to the change log. Future compiles will have a date appended and I'll
+keep an archive of previous versions. Happy new year!
+
+
+--- 2013-12-30 -------------------------------------------------------------------------------
+CHANGE: Kevin's middlecoin fix, CURL TCP keepalive constants lowered:
+CURLOPT_TCP_KEEPIDLE from 45 to 5 and CURLOPT_TCP_KEEPINTVL from 30 to 5.
+Before it'd trigger a keepalive packet after 45 seconds of connection idle time and then again
+every 30 seconds. Now it triggers a keepalive packet after 5 seconds of connection idle time and
+then again every 5 seconds.
+
+It makes the client more resilient against coin switching pools or just pools with connection
+issues in general. It will however add a tiny bit pressure to the pool server; but a
+TCP keepalive probe is only about 60-80 bytes, so I don't think it is an issue.
+See util.c line 258 and 259.
+
+
+--- 2013-12-28 -------------------------------------------------------------------------------
+CHANGE: Included Alexey Karimov's scrypt130511.cl. It gave me around 2-3Kh/s more than the
+original and every bit counts, no?! Requires AMD drivers 13.3 or later.
+
+
+--- 2013-12-23 -------------------------------------------------------------------------------
+CHANGE: Changed GPU status line from "A:xxxxx R:xxx" to "R:0.0%". It shows
+(rejected/accepted)*100, which is the percentage of rejections for a GPU. Total accepted and
+rejected in top status is unchanged. I'll probably add a toggle switch for it later, or
+something.
+
+MINOR CHANGE: Removed the intensity display on GPU status line in the ncurses window. It was
+causing a broken line and screwed with the log view too.
+See driver-opencl.c line 1306.
+
+
+--- 2013-12-22 -------------------------------------------------------------------------------
+FLUFF: Added a marquee effect to the three display separators.
+When cgminer has been running for a while, the numbers rarely update - especially when working
+on a high difficulty coin. The marquee effect adds a little movement to the screen, even if
+nothing else changes. I'll probably add a toggle switch for it later, seeing as people will
+eventually nag and bitch about it. :)
+
+
+--- 2013-12-21 -------------------------------------------------------------------------------
+MAJOR BUGFIX: Fix to handle blank screen with blinking cursor.
+It is a bug in adl.c, in the gpu_fanpercent() function, where some R9 290/290X cards return a
+negative value for fan speed percentage, where earlier models returned the default value (usually
+something like 33%). This triggers the protective code to believe the card has crashed and tries
+to restart.
+
+It's fixed by adding a variable that keeps track of the maximum fan speed percentage, and only
+trigger above mentioned protective code if maximum fan speed was ever above the triggered value.
+See adl.c line 470, 671 and 716, as well as miner.h line 330.
+
+MAJOR BUGFIX: tkg's BSOD on exit fix.
+https://litecointalk.org/index.php?topic=8859.msg78496#msg78496
+In the adl.c file around line 472, add a line just before the ADL_Overdrive5_FanSpeed_Get call:
+  ga->DefFanSpeedValue.iSpeedType=ADL_DL_FANCTRL_SPEED_TYPE_PERCENT;
+
+CHANGE: Date removed from logging timestamp. Log now looks like:
+ [23:59:57] Stratum from pool 0 detected new block
+ [23:59:59] Accepted 389c47d1 Diff 1.16K/512 GPU 0 pool 0 
+ [00:00:16] Log date is now 2013-12-22
+ [00:00:16] Stratum from pool 0 detected new block
+ [00:00:33] Accepted 7a4950a4 Diff 536/512 GPU 0 pool 0 
+
+MINOR CHANGE: Pool retry after a broken connection is lowered from 5 minutes to one minute.

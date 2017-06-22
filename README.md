@@ -10,13 +10,14 @@ sh minerd_mac.sh
 
 
 2  A卡挖矿 
-amdminer_win.cm
+amdminer_win.cm   //cgminer
 sgminer_win.cmd
 
 
 3  N卡挖矿
 
 cudamin_win.cmd
+
 
 
 4. MAC 电脑上挖矿软件
