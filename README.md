@@ -4,12 +4,12 @@
 
 1 CPU 挖矿 minerd
 
-sh minerd_linux.sh 
+sh minerd_linux.sh
 minerd_win.cmd
 sh minerd_mac.sh
 
 
-2  A卡挖矿 
+2  A卡挖矿
 amdminer_win.cm   //cgminer
 sgminer_win.cmd
 
@@ -29,14 +29,4 @@ MacMiner.app-1.5.42.zip   MacMiner需要解压缩安装
 比如：minerd.exe --timeout=6 --url=stratum+tcp://stratum.aikapool.com:7912 --userpass=aohas.aohas7:888888
 
 
-欢迎打赏：
-狗币DOGE:DL3afHFeAb4wFJo58fHL2FaTBMrvjZoH63
-
-IFC:i6r2YCRQTNobn9jTfhGwobKeZSyoSmdfBE
-
-EPC:EZ26ZYEQUJ7fEYEafL1t4WMCap7eZTHSL1
-
-BTC:1DHt3mDNF6vpc59pma6iV2e1ommn6iZYzH
-
-LTC:LZibvprmwHSmmJNA6skF1sCy11sEzYWvxi
-
+欢迎来邮件沟通： aohas@outlook.com
