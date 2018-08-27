@@ -28,5 +28,5 @@ MacMiner.app-1.5.42.zip   MacMiner需要解压缩安装
 在使用以上脚本时，需要修改矿池的地址和矿工
 比如：minerd.exe --timeout=6 --url=stratum+tcp://stratum.aikapool.com:7912 --userpass=aohas.aohas7:888888
 
-
+欢迎访问www.aohas.com
 欢迎来邮件沟通： aohas@outlook.com
